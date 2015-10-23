@@ -2,10 +2,10 @@ from leagueChromeExtension import app, db
 from leagueChromeExtension.models import Summoner
 from leagueChromeExtension_BackEnd.riotApi.core import riotApi
 
+
 @app.route('/')
 def index():
-    return {'hello': 'world',
-            'name': 'jeff'}
+    return {'hello': 'world'}
 
 
 @app.route('/summonerId/<summonerName>', methods=['GET'])
