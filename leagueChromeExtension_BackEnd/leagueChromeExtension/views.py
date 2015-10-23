@@ -47,8 +47,10 @@ def getIngameInfoName(summonerName):
 @app.route('/ingameInfo/by-id/<summonerId>', methods=['GET'])
 def getIngameInfoId(summonerId):
     riotApiHelper = riotApi()
-    try:
-        return riotApiHelper.getCurrentGameInfo(summonerId, "NA1")
-    except Exception as e:
-        return {'Message': str(e),
-                'Error': True}
+    return riotApiHelper.getCurrentGameInfo(summonerId, "NA1")
+
+    # try:
+    #     return riotApiHelper.getCurrentGameInfo(summonerId, "NA1")
+    # except Exception as e:
+    #     return {'Message': str(e),
+    #             'Error': True}

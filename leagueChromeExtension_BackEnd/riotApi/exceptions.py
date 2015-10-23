@@ -15,13 +15,35 @@ class PlatformError(Exception):
 
 
 class SummonerNotFoundError(Exception):
+    def __init__(self, summonorName):
+        self.summnorName = summonorName
+
     def __str__(self):
-        return 'The Summoner name was not found in the specified region'
+        return 'The Summoner name was not found in the specified region: %s' % self.summnorName
 
 
 class SummonerNotInGameError(Exception):
+    def __init__(self, summonerId):
+        self.summonerId = summonerId
+
     def __str__(self):
-        return 'The Summoner name was found but is currently not in an active game'
+        return 'The Summoner name was found but is currently not in an active game: %s' % self.summonerId
+
+
+class RuneNotFoundError(Exception):
+    def __init__(self, runeId):
+        self.runeId = runeId
+
+    def __str__(self):
+        return 'The rune information for the requested rune Id was not found: %d' % self.runeId
+
+
+class MasteryNotFoundError(Exception):
+    def __init__(self, masteryId):
+        self.masteryId = masteryId
+
+    def __str__(self):
+        return 'The mastery information for the requested mastery Id was not found: %d' % self.masteryId
 
 
 class UnauthorizedError(Exception):
@@ -52,10 +74,17 @@ class HttpResponseErrorHandler:
         503: ServiceUnavailable()
     }
 
-    def __init__(self, code, api):
-        if api == "gameInfo" and code == 404:
-            raise SummonerNotInGameError()
-        elif api == "summonerInfo" and code == 404:
-            raise SummonerNotFoundError()
+    def __init__(self, code, api, param):
+        if api == 'gameInfo' and code == 404:
+            raise SummonerNotInGameError(param)
+        elif api == 'summonerInfo' and code == 404:
+            raise SummonerNotFoundError(param)
+        elif api == 'runeInfo' and code == 404:
+            raise RuneNotFoundError(param)
+        elif api == 'masteryInfo' and code == 404:
+            raise MasteryNotFoundError(param)
         else:
-            raise self.common_mapping[code]
+            if code in self.common_mapping:
+                raise self.common_mapping[code]
+            else:
+                raise Exception('Unhandled response code: %d in api: %s' % (code, api))
