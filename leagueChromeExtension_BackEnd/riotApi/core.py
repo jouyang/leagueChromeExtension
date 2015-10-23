@@ -3,7 +3,6 @@ import json
 import os
 from leagueChromeExtension import app
 from exceptions import *
-from pprint import pprint
 
 
 class riotApi:
@@ -18,7 +17,6 @@ class riotApi:
     API_KEY = app.config['RIOT_API_KEY']
 
     def __init__(self):
-        # with open(app.config['STATIC_DIRECTORY'] + 'runes.json') as runes_file:
         pwd = os.path.dirname(os.path.realpath(__file__))
         filePath = os.path.join(pwd, 'static', 'runes.json')
         with open(filePath) as runes_file:
@@ -35,7 +33,8 @@ class riotApi:
             raise RegionError(region)
 
         # Setup get url and api key
-        url = '/'.join([self.ROOT_URL, self.SUMMONER_API_PLATFORM, region, self.SUMMONER_API_VERSION, self.SUMMONER_API, 'by-name', summonerName])
+        url = '/'.join([self.ROOT_URL, self.SUMMONER_API_PLATFORM, region, self.SUMMONER_API_VERSION, self.SUMMONER_API,
+                        'by-name', summonerName])
         payload = {'api_key': self.API_KEY}
         response = requests.get(url, params=payload)
 
@@ -144,6 +143,3 @@ class riotApi:
         masteryInfo['prereq'] = fullMasteryInfo['prereq']
         masteryInfo['masteryTree'] = fullMasteryInfo['masteryTree']
         return masteryInfo
-
-
-    # TODO: Make internal helper functions that grabs the data of the champion, runes, mastery data and image links

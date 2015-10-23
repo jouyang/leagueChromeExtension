@@ -1,6 +1,5 @@
 from leagueChromeExtension import app, db
 from leagueChromeExtension.models import Summoner
-# from leagueChromeExtension.riotApi import riotApi, RegionError, SummonerNotFoundError
 from leagueChromeExtension_BackEnd.riotApi.core import riotApi
 
 @app.route('/')
@@ -47,10 +46,8 @@ def getIngameInfoName(summonerName):
 @app.route('/ingameInfo/by-id/<summonerId>', methods=['GET'])
 def getIngameInfoId(summonerId):
     riotApiHelper = riotApi()
-    return riotApiHelper.getCurrentGameInfo(summonerId, "NA1")
-
-    # try:
-    #     return riotApiHelper.getCurrentGameInfo(summonerId, "NA1")
-    # except Exception as e:
-    #     return {'Message': str(e),
-    #             'Error': True}
+    try:
+        return riotApiHelper.getCurrentGameInfo(summonerId, "NA1")
+    except Exception as e:
+        return {'Message': str(e),
+                'Error': True}
