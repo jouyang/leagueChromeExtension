@@ -1,6 +1,6 @@
 from leagueChromeExtension import app, db
 from leagueChromeExtension.models import Summoner
-from leagueChromeExtension_BackEnd.riotApi.core import riotApi
+from riotApi.core import riotApi
 
 
 @app.route('/')
@@ -10,6 +10,7 @@ def index():
 
 @app.route('/summonerId/<summonerName>', methods=['GET'])
 def getId(summonerName):
+    print summonerName
     summoner = Summoner.query.filter_by(summonerNameTrim=summonerName.lower().replace(" ", "")).first()
     if summoner is None:
         try:
@@ -23,7 +24,7 @@ def getId(summonerName):
             response['summonerId'] = response['id']
             return response
         except Exception as e:
-            return {'Message': str(e),
+            return {'Message': unicode(e).encode("utf-8"),
                     'Error': True}
     else:
         return {'Message': 'Found in database',
@@ -35,6 +36,7 @@ def getId(summonerName):
 @app.route('/ingameInfo/by-name/<summonerName>', methods=['GET'])
 def getIngameInfoName(summonerName):
     # Get the summoner id through getId API
+    print summonerName
     id = getId(summonerName)
     if id['Error']:
         # If there is an error from the API then return the error json
@@ -45,9 +47,10 @@ def getIngameInfoName(summonerName):
 
 @app.route('/ingameInfo/by-id/<summonerId>', methods=['GET'])
 def getIngameInfoId(summonerId):
+    print summonerId
     riotApiHelper = riotApi()
     try:
         return riotApiHelper.getCurrentGameInfo(summonerId, "NA1")
     except Exception as e:
-        return {'Message': str(e),
+        return {'Message': unicode(e).encode("utf-8"),
                 'Error': True}

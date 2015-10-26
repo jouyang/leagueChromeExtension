@@ -19,7 +19,7 @@ class SummonerNotFoundError(Exception):
         self.summnorName = summonorName
 
     def __str__(self):
-        return 'The Summoner name was not found in the specified region: %s' % self.summnorName
+        return '404: The Summoner name was not found in the specified region: %s' % self.summnorName
 
 
 class SummonerNotInGameError(Exception):
@@ -27,7 +27,7 @@ class SummonerNotInGameError(Exception):
         self.summonerId = summonerId
 
     def __str__(self):
-        return 'The Summoner name was found but is currently not in an active game: %s' % self.summonerId
+        return '404: The Summoner name was found but is currently not in an active game: %s' % self.summonerId
 
 
 class RuneNotFoundError(Exception):
@@ -35,7 +35,7 @@ class RuneNotFoundError(Exception):
         self.runeId = runeId
 
     def __str__(self):
-        return 'The rune information for the requested rune Id was not found: %d' % self.runeId
+        return '404: The rune information for the requested rune Id was not found: %d' % self.runeId
 
 
 class MasteryNotFoundError(Exception):
@@ -43,27 +43,27 @@ class MasteryNotFoundError(Exception):
         self.masteryId = masteryId
 
     def __str__(self):
-        return 'The mastery information for the requested mastery Id was not found: %d' % self.masteryId
+        return '404: The mastery information for the requested mastery Id was not found: %d' % self.masteryId
 
 
 class UnauthorizedError(Exception):
     def __str__(self):
-        return 'The request was unauthorized, perhaps the api key has expired or the REST url is malformed'
+        return '401 UnauthorizedError: The request was unauthorized, perhaps the api key has expired or the REST url is malformed'
 
 
 class LimitExceededError(Exception):
     def __str__(self):
-        return 'The calls for this api key has exceeded the limit'
+        return '429 LimitExceededError: The calls for this api key has exceeded the limit'
 
 
 class ServerError(Exception):
     def __str__(self):
-        return 'The riot api server has crashed'
+        return '500 ServerError: The riot api server has crashed'
 
 
 class ServiceUnavailable(Exception):
     def __str__(self):
-        return 'The riot server is currently unavailable'
+        return '503 ServiceUnavailable: The riot server is currently unavailable'
 
 
 class HttpResponseErrorHandler:
