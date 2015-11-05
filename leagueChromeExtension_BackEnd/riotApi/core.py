@@ -40,8 +40,11 @@ class riotApi:
 
         # The returned json uses lower case, space-stripped summoner names as keys to summoner info
         print 'Received response from url: %r' % response.url
+        responseJson = response.json()
         if response.status_code == 200:
-            return response.json()[summonerName.lower().replace(' ', '')]
+            for key in responseJson:
+                summonerName = key
+                return responseJson[summonerName]
         else:
             HttpResponseErrorHandler(response.status_code, 'summonerInfo', summonerName)
 

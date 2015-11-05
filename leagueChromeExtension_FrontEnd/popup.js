@@ -141,5 +141,8 @@ $(function() {
   $('#btnSearch').click(function(e) {
     var summonerName = $.sanitize($('input[type="text"]').val());
     $('#summoner_title').text(summonerName);
+    $.get("http://localhost:5000/get/ingameInfo/by-name/zeroandten", function(data){
+      console.log(data);
+    });
   });
 });
