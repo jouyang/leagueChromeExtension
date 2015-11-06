@@ -9,7 +9,7 @@ def index():
 
 
 @app.route("/get/summonerId/<summonerName>", methods=["GET"])
-def getId(summonerName):
+def get_summoner_Id(summonerName):
     print "Retrieving summoner ID for: {0}".format(summonerName)
     cleanSummonerName = summonerName.replace(" ", "").lower()
     summonerEntry = SummonerNames.query.filter_by(summonerNameTrim=cleanSummonerName).first()
@@ -38,10 +38,10 @@ def getId(summonerName):
 
 
 @app.route('/get/ingameInfo/by-name/<summonerName>', methods=['GET'])
-def getIngameInfoName(summonerName):
+def get_In_game_Info_Name(summonerName):
     # Get the summoner id through getId API
     print "Retrieving summoner in game info for summoner: {0}".format(summonerName)
-    summoner = getId(summonerName)
+    summoner = get_summoner_Id(summonerName)
     if summoner['Error']:
         # If there is an error from the API then return the error json
         return summoner

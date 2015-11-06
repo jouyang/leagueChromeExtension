@@ -1,34 +1,76 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Getting Started Extension's Popup</title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-      }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
-      }
-    </style>
+
+<head>
+    <title>League Summoner In Game Helper</title>
     <script src='jquery.js'></script>
     <script src="popup.js"></script>
-  </head>
-  <body>
+    <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+
+<body>
     <section>
-      <label for="summonerName">Summoner Name:</label>
-      <input id="summonerName" type="text" name="format" placeholder="eg. Doublelift"/>
-      <button id="btnSearch">Search</button>
-      <h1 id="summoner_title">Summoner Info</h1>
+        <label for="summonerName">Summoner Name:</label>
+        <input id="summonerName" type="text" name="format" placeholder="eg. Doublelift" />
+        <button id="btnSearch">Search</button>
+        <h1 id="summoner-title">Summoner Info</h1>
+        <pre id="result"></pre>
+    </section>
+    <section id="masteries-container">
+        <!-- Offensive Masteries Box -->
+        <span id="offense-container">
+            <header class="masteries-header">
+                <h3>Offense (<span id="offense-mastery-points">21</span>)</h3>
+            </header>
+            <div id="offense-tree-container" class="tree-container">
+                <div id="mastery-tier-100">
+                    <div id="mastery-tier-100-layout" class="mastery-tier">
+                        <div id="mastery-4111" class="mastery">
+                            <span class="mastery-border">
+                                <div class="masterybox"></div>
+                                <div id="mastery-4111-point-container" class="point-container">0/1</div>
+                            </span>
+                        </div>
+                        <div id="mastery-4112" class="mastery">
+                            <span class="mastery-border">
+                                <div class="masterybox"></div>
+                                <div id="mastery-4112-point-container" class="point-container">0/1</div>
+                            </span>
+                        </div>
+                        <div id="mastery-4113" class="mastery">
+                            <span class="mastery-border">
+                                <div class="masterybox"></div>
+                                <div id="mastery-4113-point-container" class="point-container">0/1</div>
+                            </span>
+                        </div>
+                        <div id="mastery-4114" class="mastery">
+                            <span class="mastery-border">
+                                <div class="masterybox"></div>
+                                <div id="mastery-4114-point-container" class="point-container">0/1</div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="mastery-tier-101" class="mastery-tier"></div>
+                <div id="mastery-tier-102" class="mastery-tier"></div>
+                <div id="mastery-tier-103" class="mastery-tier"></div>
+                <div id="mastery-tier-105" class="mastery-tier"></div>
+                <div id="mastery-tier-107" class="mastery-tier"></div>
+            </div>
+        </span>
+        <!-- Offensive Masteries Box End -->
+        <!-- Defensive Masteries Box -->
+        <span id="defense-container">
+        </span>
+        <!-- Defensive Masteries Box End -->
+        <!-- Utility Masteries Box -->
+        <span id="utility-container">
+        </span>
+        <!-- Utility Masteries Box End -->
     </section>
     <section></section>
-    <section></section>
-    <div id="status"></div>
-    <img id="image-result" hidden>
-  </body>
-</html>
+    <!-- <div id="status"></div>
+    <img id="image-result" hidden> -->
+</body>
 
+</html>
