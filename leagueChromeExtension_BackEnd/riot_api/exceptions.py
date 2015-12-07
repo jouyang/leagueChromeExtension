@@ -15,11 +15,11 @@ class PlatformError(Exception):
 
 
 class SummonerNotFoundError(Exception):
-    def __init__(self, summonorName):
-        self.summnorName = summonorName
+    def __init__(self, summonerRegion):
+        self.summonerRegion = summonerRegion
 
     def __str__(self):
-        return '404: The Summoner name was not found in the specified region: %s' % self.summnorName
+        return '404: The Summoner name was not found in the specified region: %s' % self.summonerRegion
 
 
 class SummonerNotInGameError(Exception):
@@ -74,6 +74,7 @@ class HttpResponseErrorHandler:
         503: ServiceUnavailable()
     }
 
+    # TODO: accept more than one param for better formatting, or make param a dictionary
     def __init__(self, code, api, param):
         if api == 'gameInfo' and code == 404:
             raise SummonerNotInGameError(param)

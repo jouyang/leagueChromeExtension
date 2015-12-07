@@ -1,2 +1,2 @@
 import leagueChromeExtension
-import riotApi
+import riot_api

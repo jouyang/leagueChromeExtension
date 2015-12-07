@@ -4,10 +4,13 @@ function getSummonerIngameInfo(summonerName) {
     console.log(summonerName);
     $.get(apiUrl, function(data) {
         console.log(data);
-
         $('#result').text(JSON.stringify(data));
         return data;
     });
+}
+
+function setLoading(){
+	$('#result').empty();
 }
 
 (function($) {
@@ -36,6 +39,7 @@ $(function() {
 
     $('#btnSearch').click(function(e) {
         var summonerName = $.sanitize($('input[type="text"]').val());
+		setLoading();
         var info = getSummonerIngameInfo(summonerName);
     });
 });

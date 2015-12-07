@@ -1,6 +1,6 @@
 from leagueChromeExtension import app, db
 from leagueChromeExtension.models import Summoner, SummonerNames
-from riotApi.core import riotApi
+from riot_api.core import RiotApi
 
 
 @app.route('/')
@@ -15,8 +15,8 @@ def get_summoner_Id(summonerName):
     summonerEntry = SummonerNames.query.filter_by(summonerNameTrim=cleanSummonerName).first()
     if summonerEntry is None:
         try:
-            riotApiHelper = riotApi()
-            response = riotApiHelper.getSummonerIdFromName(summonerName, "na")
+            riotApiHelper = RiotApi()
+            response = riotApiHelper.get_summoner_id_from_name(summonerName, "na")
             newSummoner = Summoner(summonerId=response["id"])
             newSummonerName = SummonerNames(summonerName=response["name"], summonerNameTrim=cleanSummonerName,
                                             summoner=newSummoner)
@@ -53,9 +53,9 @@ def get_In_game_Info_Name(summonerName):
 @app.route('/get/ingameInfo/by-id/<summonerId>', methods=['GET'])
 def getIngameInfoId(summonerId):
     print "Retrieving summoner in game info for summoner id: {0}".format(summonerId)
-    riotApiHelper = riotApi()
+    riotApiHelper = RiotApi()
     try:
-        return riotApiHelper.getCurrentGameInfo(summonerId, "NA1")
+        return riotApiHelper.get_current_game_info(summonerId, "NA1")
     except Exception as e:
         return {'Message': unicode(e).encode("utf-8"),
                 'Error': True}

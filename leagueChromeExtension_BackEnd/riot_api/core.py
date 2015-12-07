@@ -5,7 +5,7 @@ from leagueChromeExtension import app
 from exceptions import *
 
 
-class riotApi:
+class RiotApi:
     ROOT_URL = 'https://na.api.pvp.net'
     CURRENT_GAME_URL = 'observer-mode/rest/consumer/getSpectatorGameInfo'
     STATIC_DATA_URL = 'https://global.api.pvp.net/api/lol/static-data/na/v1.2'
@@ -18,16 +18,16 @@ class riotApi:
 
     def __init__(self):
         pwd = os.path.dirname(os.path.realpath(__file__))
-        filePath = os.path.join(pwd, 'static', 'runes.json')
-        with open(filePath) as runes_file:
+        file_path = os.path.join(pwd, 'static', 'runes.json')
+        with open(file_path) as runes_file:
             self.RUNEDATA = json.load(runes_file)
 
-        filePath = os.path.join(pwd, 'static', 'masteries.json')
-        with open(filePath) as masteries_file:
+        file_path = os.path.join(pwd, 'static', 'masteries.json')
+        with open(file_path) as masteries_file:
             self.MASTERYDATA = json.load(masteries_file)
 
     # Sample:https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/jouyang?api_key=[]
-    def getSummonerIdFromName(self, summonerName, region):
+    def get_summoner_id_from_name(self, summonerName, region):
         # Check for valid region
         if region not in self.REGIONS:
             raise RegionError(region)
@@ -40,16 +40,16 @@ class riotApi:
 
         # The returned json uses lower case, space-stripped summoner names as keys to summoner info
         print 'Received response from url: %r' % response.url
-        responseJson = response.json()
         if response.status_code == 200:
+            responseJson = response.json()
             for key in responseJson:
                 summonerName = key
                 return responseJson[summonerName]
         else:
-            HttpResponseErrorHandler(response.status_code, 'summonerInfo', summonerName)
+            HttpResponseErrorHandler(response.status_code, 'summonerInfo', region)
 
     # Sample:https://na.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/NA1/44979352?api_key=[]
-    def getCurrentGameInfo(self, summonerId, platform):
+    def get_current_game_info(self, summonerId, platform):
         # Check for valid region
         if platform not in self.PLATFORMS:
             raise PlatformError(platform)
@@ -60,22 +60,22 @@ class riotApi:
         response = requests.get(url, params=payload)
         print'Received response from url: %r' % response.url
         if response.status_code == 200:
-            return self.gameInfoFilter(response.json(), summonerId)
+            return self.game_info_filter(response.json(), summonerId)
         else:
             HttpResponseErrorHandler(response.status_code, 'gameInfo', summonerId)
 
-    def gameInfoFilter(self, gameInfo, summonerId):
+    def game_info_filter(self, gameInfo, summonerId):
         for participant in gameInfo['participants']:
             if str(participant['summonerId']) == summonerId:
-                return {'masteries': map(self.masteriesInfoDetailsLocal, participant['masteries']),
-                        'runes': map(self.runesInfoDetailsLocal, participant['runes']),
+                return {'masteries': map(self.masteries_info_detail_local, participant['masteries']),
+                        'runes': map(self.rune_info_details_local, participant['runes']),
                         'championId': participant['championId'],
                         'summonerName': participant['summonerName'],
                         'summonerId': participant['summonerId']}
 
     # Sample: https://global.api.pvp.net/api/lol/static-data/na/v1.2/rune/5273?runeData=all&api_key=[]
-    def runesInfoDetails(self, runes):
-        runeList = []
+    def runes_info_detail(self, runes):
+        rune_list = []
         for rune in runes:
             url = '/'.join([self.STATIC_DATA_URL, 'rune', str(rune['runeId'])])
             payload = {'api_key': self.API_KEY, 'runeData': 'all'}
@@ -83,35 +83,35 @@ class riotApi:
             print 'Received response from url: %r' % response.url
 
             if response.status_code == 200:
-                runeInfo = {}
-                fullRuneInfo = response.json()
-                runeInfo['description'] = fullRuneInfo['sanitizedDescription']
-                runeInfo['imageInfo'] = fullRuneInfo['image']
-                runeInfo['name'] = fullRuneInfo['name']
-                runeInfo['details'] = fullRuneInfo['rune']
-                runeInfo['stats'] = fullRuneInfo['stats']
-                runeInfo['amount'] = rune['count']
-                runeList.append(runeInfo)
+                rune_info = {}
+                full_rune_info = response.json()
+                rune_info['description'] = full_rune_info['sanitizedDescription']
+                rune_info['imageInfo'] = full_rune_info['image']
+                rune_info['name'] = full_rune_info['name']
+                rune_info['details'] = full_rune_info['rune']
+                rune_info['stats'] = full_rune_info['stats']
+                rune_info['amount'] = rune['count']
+                rune_list.append(rune_info)
             else:
                 HttpResponseErrorHandler(response.status_code, 'runeInfo', rune['runeId'])
 
-        return runeList
+        return rune_list
 
-    def runesInfoDetailsLocal(self, rune):
+    def rune_info_details_local(self, rune):
         id = rune['runeId']
-        fullRuneInfo = self.RUNEDATA['data'][str(id)]
-        runeInfo = {}
-        runeInfo['description'] = fullRuneInfo['sanitizedDescription']
-        runeInfo['imageInfo'] = fullRuneInfo['image']
-        runeInfo['name'] = fullRuneInfo['name']
-        runeInfo['details'] = fullRuneInfo['rune']
-        runeInfo['stats'] = fullRuneInfo['stats']
-        runeInfo['amount'] = rune['count']
-        return runeInfo
+        rune_info = {}
+        full_rune_info = self.RUNEDATA['data'][str(id)]
+        rune_info['description'] = full_rune_info['sanitizedDescription']
+        rune_info['imageInfo'] = full_rune_info['image']
+        rune_info['name'] = full_rune_info['name']
+        rune_info['details'] = full_rune_info['rune']
+        rune_info['stats'] = full_rune_info['stats']
+        rune_info['amount'] = rune['count']
+        return rune_info
 
-    # Sample: https://global.api.pvp.net/api/lol/static-data/na/v1.2/mastery/4124?masteryData=all&api_key=[]
-    def masteriesInfoDetails(self, masteries):
-        masteryList = []
+    # Sample: https://global.api.pvp.net/api/lol/static-data/na/v1.2/6111?masteryData=all&api_key=[]
+    def masteries_info_detail(self, masteries):
+        mastery_list = []
         for mastery in masteries:
             url = '/'.join([self.STATIC_DATA_URL, 'mastery', str(mastery['masteryId'])])
             payload = {'api_key': self.API_KEY, 'masteryData': 'all'}
@@ -119,30 +119,29 @@ class riotApi:
             print 'Received response from url: ' + response.url
             print response.json()
             if response.status_code == 200:
-                masteryInfo = {}
-                fullMasteryInfo = response.json()
-                masteryInfo['rank'] = fullMasteryInfo['ranks']
-                masteryInfo['id'] = fullMasteryInfo['id']
-                masteryInfo['description'] = fullMasteryInfo['description']
-                masteryInfo['name'] = fullMasteryInfo['name']
-                masteryInfo['imageInfo'] = fullMasteryInfo['image']
-                masteryInfo['prereq'] = fullMasteryInfo['prereq']
-                masteryInfo['masteryTree'] = fullMasteryInfo['masteryTree']
-                masteryList.append(masteryInfo)
+                mastery_info = {}
+                full_mastery_info = response.json()
+                mastery_info['rank'] = full_mastery_info['ranks']
+                mastery_info['id'] = full_mastery_info['id']
+                mastery_info['description'] = full_mastery_info['description']
+                mastery_info['name'] = full_mastery_info['name']
+                mastery_info['imageInfo'] = full_mastery_info['image']
+                mastery_info['prereq'] = full_mastery_info['prereq']
+                mastery_info['masteryTree'] = full_mastery_info['masteryTree']
+                mastery_list.append(mastery_info)
             else:
                 HttpResponseErrorHandler(response.status_code, 'masteryInfo', mastery['masteryId'])
 
-        return masteryList
+        return mastery_list
 
-    def masteriesInfoDetailsLocal(self, mastery):
-        id = mastery['masteryId']
-        masteryInfo = {}
-        fullMasteryInfo = self.MASTERYDATA['data'][str(id)]
-        masteryInfo['rank'] = fullMasteryInfo['ranks']
-        masteryInfo['id'] = fullMasteryInfo['id']
-        masteryInfo['description'] = fullMasteryInfo['description']
-        masteryInfo['name'] = fullMasteryInfo['name']
-        masteryInfo['imageInfo'] = fullMasteryInfo['image']
-        masteryInfo['prereq'] = fullMasteryInfo['prereq']
-        masteryInfo['masteryTree'] = fullMasteryInfo['masteryTree']
-        return masteryInfo
+    def masteries_info_detail_local(self, mastery):
+        mastery_info = {}
+        full_mastery_info = self.MASTERYDATA['data'][str(mastery['masteryId'])]
+        mastery_info['rank'] = full_mastery_info['ranks']
+        mastery_info['id'] = full_mastery_info['id']
+        mastery_info['description'] = full_mastery_info['description']
+        mastery_info['name'] = full_mastery_info['name']
+        mastery_info['imageInfo'] = full_mastery_info['image']
+        mastery_info['prereq'] = full_mastery_info['prereq']
+        mastery_info['masteryTree'] = full_mastery_info['masteryTree']
+        return mastery_info
